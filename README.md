@@ -4,7 +4,7 @@ An example Svelte application that shows how to use [`esri-loader`](https://gith
 
 [Live demo here!](https://esri-svelte-basemaps-example.now.sh/)
 
-<https://esri-svelte-basemaps-example.now.sh/>
+[![screenshot](https://raw.githubusercontent.com/jwasilgeo/esri-svelte-basemaps-example/master/screenshot.png)](https://esri-svelte-basemaps-example.now.sh/)
 
 The source code in this repo was scaffolded and started with the Svelte project template. I have included the template's original README content below.
 
