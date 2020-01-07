@@ -9,13 +9,14 @@
   export let basemap;
   export let center;
   export let scale;
+  export let syncExtents;
 </script>
 
 <div class="card">
   <p id={basemap} class="basemap-title">{basemap}</p>
 
   <div class="esri-map-view-wrapper">
-    <EsriMapView basemap={basemap} center={center} scale={scale}></EsriMapView>
+    <EsriMapView basemap={basemap} center={center} scale={scale} syncExtents={syncExtents}></EsriMapView>
   </div>
 
   <div class="top-link">

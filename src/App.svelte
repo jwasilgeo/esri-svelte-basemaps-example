@@ -8,6 +8,11 @@
   export let demoCenter = [-59.5, -51.85];
   export let demoScale = 4622324;
 
+  // optionally sync MapView extents by binding a Boolean value to a checkbox
+  // and passing the value down to the <EsriMapView> children components
+  let syncExtents = true;
+  const syncExtentsLabel = 'Sync Extent and Rotation?';
+
   // use a unique raster basemap for each <EsriMapView>
 	const rasterBasemaps = [
 		'topo',
@@ -73,19 +78,27 @@
 
   <hr>
 
+  <label>
+    <input type="checkbox" bind:checked={syncExtents}/> {syncExtentsLabel}
+  </label>
+
 	<h3 id="raster-basemaps">Raster Tile Basemaps</h3>
 
   <!-- a list of <Card> components containing one <EsriMapView> component -->
 	{#each rasterBasemaps as basemap}
-    <Card basemap={basemap} center={demoCenter} scale={demoScale}></Card>
+    <Card basemap={basemap} center={demoCenter} scale={demoScale} syncExtents={syncExtents}></Card>
 	{/each}
 
 	<h3 id="vector-basemaps">Vector Tile Basemaps</h3>
 
   <!-- another list of <Card> components containing one <EsriMapView> component -->
 	{#each vectorBasemaps as basemap}
-    <Card basemap={basemap} center={demoCenter} scale={demoScale}></Card>
-	{/each}
+    <Card basemap={basemap} center={demoCenter} scale={demoScale} syncExtents={syncExtents}></Card>
+  {/each}
+
+  <label>
+    <input type="checkbox" bind:checked={syncExtents} /> {syncExtentsLabel}
+  </label>
 </main>
 
 <style>
@@ -149,6 +162,11 @@
 		content: "";
 		padding: 0;
 	}
+
+  label {
+    text-align: center;
+    cursor: pointer;
+  }
 
 	@media (max-width: 640px) {
 		main, nav {
