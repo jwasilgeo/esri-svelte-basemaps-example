@@ -54,10 +54,10 @@
       // add this MapView to the shared array
       allViews.push(view);
 
-      view.on('pointer-enter', () => {
-        // when a pointer enters or when a touch begins:
-        // 1. remove an existing currentViewWatcher bound to a different MapView
-        // 2. establish a new currentViewWatcher for this MapView,
+      const userInteractionHandler = () => {
+        // 1. remove an existing "currentViewWatcher" bound to either a different MapView
+        //    or another user interaction event for the same MapView
+        // 2. establish a new "currentViewWatcher" for this MapView,
         //    which will update the extent and rotation of all other MapViews
 
         if (currentViewWatcher && currentViewWatcher.remove) {
@@ -82,7 +82,16 @@
               }
             });
         });
-      });
+      };
+
+      // call the interaction syncing handler when a pointer enters or when a touch begins in the MapView
+      view.on('pointer-enter', userInteractionHandler);
+
+      // and call the interaction syncing handler when a click or touch occurs on the MapView's zoom and compass controls
+      // (this is to account for when using a touch device and only interacting with a zoom button, for example,
+      // which would have never fired the MapView's "pointer-enter" event)
+      view.ui.find('zoom').container.addEventListener('click', userInteractionHandler);
+      view.ui.find('compass').container.addEventListener('click', userInteractionHandler);
     });
   });
 </script>

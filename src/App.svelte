@@ -126,6 +126,7 @@
 
   .author {
     color: #ff3e00;
+    text-decoration: underline;
   }
 
   hr {
