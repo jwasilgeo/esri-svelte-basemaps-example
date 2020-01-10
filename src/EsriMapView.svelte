@@ -1,16 +1,7 @@
-<script context="module">
-  // this block of JS code only exists to optionally sync MapView extents
-
-  // will provide access to all MapView instances at a later point
-  let allViews = [];
-
-  // will provide access to a MapView property watcher at a later point
-  let currentViewWatcher;
-</script>
-
 <script>
   import { onMount } from 'svelte';
   import { loadModules } from 'esri-loader';
+  import { storeExtent } from './stores.js';
 
   // props with default values
   export let basemap = 'streets';
@@ -31,10 +22,12 @@
 
     const [
       EsriMap,
-      MapView
+      MapView,
+      watchUtils
     ] = await loadModules([
       'esri/Map',
-      'esri/views/MapView'
+      'esri/views/MapView',
+      'esri/core/watchUtils'
     ], options);
 
     const view = new MapView({
@@ -51,47 +44,23 @@
 
     // the rest of this JS code only exists to optionally sync MapView extents
     view.when(() => {
-      // add this MapView to the shared array
-      allViews.push(view);
-
-      const userInteractionHandler = () => {
-        // 1. remove an existing "currentViewWatcher" bound to either a different MapView
-        //    or another user interaction event for the same MapView
-        // 2. establish a new "currentViewWatcher" for this MapView,
-        //    which will update the extent and rotation of all other MapViews
-
-        if (currentViewWatcher && currentViewWatcher.remove) {
-          currentViewWatcher.remove();
+      let firstRun = true;
+      watchUtils.whenTrue(view, "stationary", newExtent => {
+        // Do not set the extent the first time the map loads:
+        if (firstRun) {
+          firstRun = false;
+        } else {
+          // Set the store with the extent
+          storeExtent.set(view.extent);
         }
+      });
+    });
 
-        if (!syncExtents) {
-          return;
-        }
-
-        currentViewWatcher = view.watch('extent', (newExtent) => {
-          allViews
-            // filter to get only the other MapViews that are not being interacted with
-            .filter((otherView) => otherView.container !== view.container)
-            .forEach((otherView) => {
-              // update the extent of the other MapViews based on the current MapView being interacted with
-              otherView.extent = newExtent;
-
-              // also update the other MapViews' rotation to match the current MapView's rotation
-              if (otherView.rotation !== view.rotation) {
-                otherView.rotation = view.rotation;
-              }
-            });
-        });
-      };
-
-      // call the interaction syncing handler when a pointer enters or when a touch begins in the MapView
-      view.on('pointer-enter', userInteractionHandler);
-
-      // and call the interaction syncing handler when a click or touch occurs on the MapView's zoom and compass controls
-      // (this is to account for when using a touch device and only interacting with a zoom button, for example,
-      // which would have never fired the MapView's "pointer-enter" event)
-      view.ui.find('zoom').container.addEventListener('click', userInteractionHandler);
-      view.ui.find('compass').container.addEventListener('click', userInteractionHandler);
+    // Every time the store is updated, update this map's extent to match what is in the store.
+    storeExtent.subscribe(newExtent => {
+      if (syncExtents && newExtent) {
+        view.extent = newExtent;
+      }
     });
   });
 </script>
