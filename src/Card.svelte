@@ -1,5 +1,5 @@
 <script>
-  // this <Card> component helps to organize:
+  // the <Card> component helps to organize:
   // - the basemap title
   // - an <EsriMapView> component instance
   // - and a link to help the user go back up
@@ -9,14 +9,13 @@
   export let basemap;
   export let center;
   export let scale;
-  export let syncExtents;
 </script>
 
 <div class="card">
   <p id={basemap} class="basemap-title">{basemap}</p>
 
   <div class="esri-map-view-wrapper">
-    <EsriMapView basemap={basemap} center={center} scale={scale} syncExtents={syncExtents}></EsriMapView>
+    <EsriMapView basemap={basemap} center={center} scale={scale}></EsriMapView>
   </div>
 
   <div class="top-link">

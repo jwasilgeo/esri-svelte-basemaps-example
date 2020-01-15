@@ -1,17 +1,14 @@
 <script>
-	import Card from './Card.svelte';
+  import Card from './Card.svelte';
+  import SyncExtentsCheckbox from './SyncExtentsCheckbox.svelte'
 
+  // a handful of configurable props defined in main.js
 	export let title;
   export let subtitle;
 
   // use the same center and scale for each <EsriMapView>
-  export let demoCenter = [-59.5, -51.85];
-  export let demoScale = 4622324;
-
-  // optionally sync MapView extents by binding a Boolean value to a checkbox
-  // and passing the value down to the <EsriMapView> children components
-  let syncExtents = true;
-  const syncExtentsLabel = 'Sync Extent and Rotation?';
+  export let demoCenter;
+  export let demoScale;
 
   // use a unique raster basemap for each <EsriMapView>
 	const rasterBasemaps = [
@@ -45,7 +42,8 @@
   <h2>{subtitle}</h2>
 
   <p class="project-info">
-    Built by <a href="https://twitter.com/JWasilGeo" class="author">Jacob Wasilkowski</a> with
+    Built by <a href="https://twitter.com/JWasilGeo" class="author">Jacob Wasilkowski</a> and
+    <a href="https://github.com/jwasilgeo/esri-svelte-basemaps-example/graphs/contributors" target="_blank" class="author">friends</a> with
     <a href="https://svelte.dev" target="_blank">Svelte</a> and
     <a href="https://github.com/esri/esri-loader" target="_blank">esri-loader</a>.
   </p>
@@ -78,27 +76,23 @@
 
   <hr>
 
-  <label>
-    <input type="checkbox" bind:checked={syncExtents}/> {syncExtentsLabel}
-  </label>
+  <SyncExtentsCheckbox />
 
 	<h3 id="raster-basemaps">Raster Tile Basemaps</h3>
 
   <!-- a list of <Card> components containing one <EsriMapView> component -->
 	{#each rasterBasemaps as basemap}
-    <Card basemap={basemap} center={demoCenter} scale={demoScale} syncExtents={syncExtents}></Card>
+    <Card basemap={basemap} center={demoCenter} scale={demoScale}></Card>
 	{/each}
 
 	<h3 id="vector-basemaps">Vector Tile Basemaps</h3>
 
   <!-- another list of <Card> components containing one <EsriMapView> component -->
 	{#each vectorBasemaps as basemap}
-    <Card basemap={basemap} center={demoCenter} scale={demoScale} syncExtents={syncExtents}></Card>
+    <Card basemap={basemap} center={demoCenter} scale={demoScale}></Card>
   {/each}
 
-  <label>
-    <input type="checkbox" bind:checked={syncExtents} /> {syncExtentsLabel}
-  </label>
+  <SyncExtentsCheckbox />
 </main>
 
 <style>
@@ -163,11 +157,6 @@
 		content: "";
 		padding: 0;
 	}
-
-  label {
-    text-align: center;
-    cursor: pointer;
-  }
 
 	@media (max-width: 640px) {
 		main, nav {
