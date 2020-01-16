@@ -5,8 +5,7 @@
 
   import { onMount } from 'svelte';
   import { loadModules } from 'esri-loader';
-  import { storeExtentInfo, storeSyncExtents } from './stores.js';
-  import { get } from 'svelte/store';
+  import { storeExtentInfo, storeSyncExtentsEnabled } from './stores.js';
 
   // props with default values in case none are passed in by a parent
   export let basemap = 'streets';
@@ -45,7 +44,7 @@
       center,
       scale,
       ui: {
-        // add the compass widget which is not standard for an Esri MapView
+        // add the compass widget which is not standard for a MapView
         components: ['attribution', 'zoom', 'compass']
       }
     });
@@ -54,11 +53,11 @@
     view.when(() => {
       let firstRun = true;
       watchUtils.whenTrue(view, 'stationary', newExtent => {
-        // Do not set the extent or rotation the first time the map loads:
+        // do not set the extent or rotation the first time the MapView loads
         if (firstRun) {
           firstRun = false;
         } else {
-          // Set the store with the extent and rotation
+          // set the store with the extent and rotation
           storeExtentInfo.set({
             extent: view.extent,
             rotation: view.rotation
@@ -67,9 +66,10 @@
       });
     });
 
-    // Every time the store is updated, update this map's extent and rotation to match what is in the store.
+    // every time the store is updated, set this MapView instance's extent
+    // and rotation to match what is in the store
     storeExtentInfo.subscribe(extentInfo => {
-      if (get(storeSyncExtents)) {
+      if ($storeSyncExtentsEnabled) {
         view.extent = extentInfo.extent;
         view.rotation = extentInfo.rotation;
       }
@@ -77,11 +77,10 @@
 
     // when the sync extents option is checked on again,
     // sync the MapView instances with the latest store information
-    storeSyncExtents.subscribe(syncExtents => {
-      if (syncExtents) {
-        const extentInfo = get(storeExtentInfo);
-        view.extent = extentInfo.extent;
-        view.rotation = extentInfo.rotation;
+    storeSyncExtentsEnabled.subscribe(syncExtentsEnabled => {
+      if (syncExtentsEnabled) {
+        view.extent = $storeExtentInfo.extent;
+        view.rotation = $storeExtentInfo.rotation;
       }
     });
   });

@@ -5,11 +5,11 @@
   // the same store is then used by <EsriMapView> children components
   // to know if they should sync their extents and rotations
 
-  import { storeSyncExtents } from './stores.js';
+  import { storeSyncExtentsEnabled } from './stores.js';
 </script>
 
 <label>
-  <input type="checkbox" bind:checked={$storeSyncExtents} />
+  <input type="checkbox" bind:checked={$storeSyncExtentsEnabled} />
   Sync Extent and Rotation?
 </label>
 

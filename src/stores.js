@@ -1,4 +1,6 @@
 // https://svelte.dev/tutorial/writable-stores
+// https://svelte.dev/docs#writable
+
 import { writable } from "svelte/store";
 
 export const storeExtentInfo = writable({
@@ -6,4 +8,4 @@ export const storeExtentInfo = writable({
   rotation: null
 });
 
-export const storeSyncExtents = writable(true);
+export const storeSyncExtentsEnabled = writable(true);
