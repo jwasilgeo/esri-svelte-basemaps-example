@@ -52,7 +52,7 @@
     // the rest of this JS code only exists to optionally sync MapView instance extents and rotations
     view.when(() => {
       let firstRun = true;
-      watchUtils.whenTrue(view, 'stationary', newExtent => {
+      watchUtils.whenTrue(view, 'stationary', () => {
         // do not set the extent or rotation the first time the MapView loads
         if (firstRun) {
           firstRun = false;
