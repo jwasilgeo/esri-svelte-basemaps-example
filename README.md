@@ -78,7 +78,7 @@ Then, from within your project folder:
 
 ```bash
 cd public
-now deploy --name my-project
+now --prod
 ```
 
 As an alternative, use the [Now desktop client](https://zeit.co/download) and simply drag the unzipped project folder to the taskbar icon.
