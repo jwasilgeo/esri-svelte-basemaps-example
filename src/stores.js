@@ -1,7 +1,7 @@
 // https://svelte.dev/tutorial/writable-stores
 // https://svelte.dev/docs#writable
 
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
 export const storeExtentInfo = writable({
   extent: null,
